@@ -53,6 +53,13 @@ servers=[
 ]
  
 Vagrant.configure(2) do |config|
+    config.vm.provision "shell", inline: <<-SHELL
+      add-apt-repository ppa:openjdk-r/ppa -y
+      apt-get update
+      echo "\n----- Installing Java 8 ------\n"
+      apt-get -y install openjdk-8-jdk
+      update-alternatives --config java    
+    SHELL	
     config.vm.synced_folder ".", vconfig['vagrant_directory'], :mount_options => ["dmode=777", "fmode=666"]
     servers.each do |machine|
         config.vm.define machine[:hostname] do |node|
